@@ -16,5 +16,4 @@ public class InventoryDTO {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	
 }

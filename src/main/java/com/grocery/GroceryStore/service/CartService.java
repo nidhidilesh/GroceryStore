@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.grocery.GroceryStore.entity.Grocery;
 import com.grocery.GroceryStore.exception.GlobalExceptionHandler;
 import com.grocery.GroceryStore.exception.ResourceNotFoundException;
+import com.grocery.GroceryStore.model.PaymentType;
 import com.grocery.GroceryStore.entity.Cart;
 import com.grocery.GroceryStore.entity.CartItem;
 import com.grocery.GroceryStore.repository.CartItemRepository;
@@ -31,6 +32,9 @@ public class CartService {
 	
 	@Autowired
 	private GroceryRepository groceryRepository;
+	
+//	@Autowired
+//	private PaymentType paymentType;
 	
 	/*Method to find user if it exists otherwise create a new record in cart table*/
 	public Cart findOrCreateByuserId(int userId) {
@@ -143,4 +147,14 @@ public class CartService {
 			throw new RuntimeException("Sorry, Grocery " + groceryFromDb.get().getName() + " you are trying to add to cart is out of stock. Remaining quantity is " + groceryFromDb.get().getQuantity());
 		}
 	}
+	
+	public void checkout(Optional<Integer> paymentTypeId) {
+		
+	}
+	
+//	public void setPaymentType(Optional<Integer> paymentTypeId) {
+//		if(!paymentTypeId.isPresent()) {
+//			paymentType.set
+//		}
+//	}
 }

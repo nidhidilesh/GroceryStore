@@ -1,10 +1,12 @@
 package com.grocery.GroceryStore.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,9 @@ public class GroceryService {
 	@Autowired
 	private GlobalExceptionHandler exceptionHandler;
 	
+	@Autowired
+	private RedisService redisService;
+	
 	public ResponseEntity<String> addGrocery(Grocery grocery) {
 		groceryRepository.save(grocery);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -32,6 +37,20 @@ public class GroceryService {
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
+	public ResponseEntity<Grocery> findById(int id) {
+		Grocery g = redisService.get("grocery_by_id_"+id, Grocery.class);
+		if(g != null) {
+			return new ResponseEntity<>(g,HttpStatus.OK);
+		}
+		else {
+			Optional<Grocery> groceryOptional = groceryRepository.findById(id);
+			if(groceryOptional.isPresent()) {
+				redisService.set("grocery_by_id"+id, groceryOptional.get(), 100);
+				return new ResponseEntity<>(groceryOptional.get(),HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
 	
 	public ResponseEntity<Object> deleteGrocery(int id) {
 		boolean groceryExistsforId = groceryRepository.existsById(id);
@@ -77,5 +96,7 @@ public class GroceryService {
 			return exceptionHandler.handleNotFoundException(nfe);
 		}
 	}
+
+	
 
 }

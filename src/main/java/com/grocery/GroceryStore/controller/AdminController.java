@@ -43,8 +43,14 @@ public class AdminController {
 	}
 	
 	/*Method to fetch all groceries from database*/
-	@GetMapping("view-groceries")
-	public ResponseEntity<List<Grocery>> viewAllGroceries(){
+	@GetMapping("view-groceries/{id}")
+	public ResponseEntity<Grocery> viewAllGroceries(@PathVariable int id ){
+		return groceryService.findById(id);
+	}
+	
+	/*Method to fetch grocery by id database*/
+	@GetMapping("view-grocery")
+	public ResponseEntity<List<Grocery>> viewGrocery(){
 		return groceryService.findAll();
 	}
 	
